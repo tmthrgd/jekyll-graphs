@@ -62,45 +62,45 @@ jekyll-graphs allows all the following options to be specified:
     
     renderer
         The desired renderer. From the following lists:
-	    graphviz: dot neato twopi circo fdp sfdp patchwork
-	    tex: tex latex pdftex pdflatex xetex xelatex luatex lualatex
-	    others: mscgen plantuml shaape
+            graphviz: dot neato twopi circo fdp sfdp patchwork
+            tex: tex latex pdftex pdflatex xetex xelatex luatex lualatex
+            others: mscgen plantuml shaape
     
     format
         The output format of the svg. Supported values:
-	    img: <img src="...svg" alt="..." title="...">
-	    object: <object data="...svg" type="image/svg+xml"><a href="...svg">...</a></object>
-	    embed: <embed src="...svg" type="image/svg+xml" />
-	    iframe: <iframe src="...svg" sandbox="allow-scripts"></iframe>
-	    url, uri, href: ...svg
-	    svg: <svg ...>...</svg>
-	
-	Defaults to svg.
+            img: <img src="...svg" alt="..." title="...">
+            object: <object data="...svg" type="image/svg+xml"><a href="...svg">...</a></object>
+            embed: <embed src="...svg" type="image/svg+xml" />
+            iframe: <iframe src="...svg" sandbox="allow-scripts"></iframe>
+            url, uri, href: ...svg
+            svg: <svg ...>...</svg>
+        
+        Defaults to svg.
 
 The liquid block and kramdown code block methods also permit the following extra options to be specified:
 
     dirname
         The output path of the rendered image. This may contain %{hash} which
         will be replaced by a hexadecimal string unquie to the image, and %{slug}
-	which will be replaced with a slug either generated from the graph or
-	the name of the renderer.
+        which will be replaced with a slug either generated from the graph or
+        the name of the renderer.
     
     name
         The output filename of the rendered image. This may contain %{hash}
         which will be replaced by a hexadecimal string unquie to the image, and %{slug}
-	which will be replaced with a slug either generated from the graph or
-	the name of the renderer.
+        which will be replaced with a slug either generated from the graph or
+        the name of the renderer.
 
 The following global-only option may be specified:
 
     renderers
         It is a hash of key-values, with renderer names specified as keys and paths or
-	arguments specified as values. If a string is provided, it is expected to be the
-	path to the executable. If an array is provided, the first item will be treated as
-	the path to an executable and the remaining items as command line arguments.
-	
-	The command line arguments for PlantUML must be specified to use it. They should be
-	provided as [java, -jar, /path/to/plantuml.8021.jar].
+        arguments specified as values. If a string is provided, it is expected to be the
+        path to the executable. If an array is provided, the first item will be treated as
+        the path to an executable and the remaining items as command line arguments.
+        
+        The command line arguments for PlantUML must be specified to use it. They should be
+        provided as [java, -jar, /path/to/plantuml.8021.jar].
 
 #### Global Configuration
 
