@@ -83,9 +83,10 @@ module JGraphs
 			
 			return generate_svg_tex if TeXRenderers.include? renderer.to_s
 			
-			chdir = file ? File.dirname(file) : dir
+			chdir = File.join site.source, file ? File.dirname(file) : dir
+			FileUtils.mkdir_p chdir
 			
-			IO.popen renderer_cmd renderer, "r+", :chdir => chdir do |pipe|
+			IO.popen renderer_cmd(renderer), "r+", :chdir => chdir do |pipe|
 				pipe.binmode
 				
 				pipe.write code
@@ -110,8 +111,9 @@ module JGraphs
 				
 				dvi_path = "#{dir}/#{File.basename tex_path, ".*"}.#{renderer == :xetex || renderer == :xelatex ? "xdv" : "dvi"}"
 				
-				chdir = file ? File.dirname(file) : dir
-				
+				chdir = File.join site.source, file ? File.dirname(file) : dir
+				FileUtils.mkdir_p chdir
+
 				File.write tex_path, code unless file
 				
 				#Process.wait IO.popen(tex_cmd, :err => [:child, :out], :chdir => chdir).pid
@@ -438,10 +440,10 @@ module Jekyll
 		
 		def parse_attributes markup
 			# boolean key|no-key options
-			attributes = Hash[markup.scan(/(?<=\s|^)(no-)?(\w+)(?=\s|$)/i).map { |falsey, key| [key.to_sym, !falsey] }]
+			attributes = Hash[markup.scan(/(?<=\s|^)(no-)?(\w+)(?=\s|$)/i).map { |falsey, key| [key.to_sym, !falsey] }.compact]
 			
 			# key:value options
-			attributes.merge! Hash[markup.scan(Liquid::TagAttributes).map { |key, value| [key.to_sym, value] }]
+			attributes.merge! Hash[markup.scan(Liquid::TagAttributes).map { |key, value| [key.to_sym, value] }.compact]
 			
 			attributes
 		end
@@ -502,10 +504,10 @@ module Jekyll
 		
 		def parse_attributes markup
 			# boolean key|no-key options
-			attributes = Hash[markup.scan(/(?<=\s|^)(no-)?(\w+)(?=\s|$)/i).map { |falsey, key| [key.to_sym, !falsey] }]
+			attributes = Hash[markup.scan(/(?<=\s|^)(no-)?(\w+)(?=\s|$)/i).map { |falsey, key| [key.to_sym, !falsey] }.compact]
 			
 			# key:value options
-			attributes.merge! Hash[markup.scan(Liquid::TagAttributes).map { |key, value| [key.to_sym, value] }]
+			attributes.merge! Hash[markup.scan(Liquid::TagAttributes).map { |key, value| [key.to_sym, value] }.compact]
 			
 			attributes
 		end
@@ -556,7 +558,7 @@ begin
 			
 			unless klass.to_s.empty?
 				# Class attribute boolean key|no-key options
-				flags = Hash[klass.scan(/(?<=\s|^)(no-)?(\w+)(?=\s|$)/i).map { |falsey, key| [key.to_sym, !falsey] }]
+				flags = Hash[klass.scan(/(?<=\s|^)(no-)?(\w+)(?=\s|$)/i).map { |falsey, key| [key.to_sym, !falsey] }.compact]
 				flags.keep_if { |key, _| JGraphs::TagImg::Flags.include? key }
 				flags.each_key { |key| klass.gsub! /(?:\s|^)(no-)?#{Regexp.escape key}(?:\s|$)/i, "" }
 				arguments.replace flags
@@ -573,10 +575,10 @@ begin
 					else next
 					end
 				]
-			end]
+			end.compact]
 			
 			# IAL options
-			arguments.merge! Hash[JGraphs::TagImg::ValueOptions.map { |key| [key.to_sym, attr.delete(key) || next] }]
+			arguments.merge! Hash[JGraphs::TagImg::ValueOptions.map { |key| [key.to_sym, attr.delete(key) || next] }.compact]
 			
 			arguments[:renderer] = renderer if renderer
 			
